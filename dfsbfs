@@ -1,0 +1,66 @@
+from collections import deque
+
+class Graph:
+    def __init__(self):
+        self.graph = {}
+
+    def add_edge(self, u, v):
+        if u in self.graph:
+            self.graph[u].append(v)
+        else:
+            self.graph[u] = [v]
+
+        if v in self.graph:
+            self.graph[v].append(u)
+        else:
+            self.graph[v] = [u]
+
+    def dfs(self, start, visited=None):
+        if visited is None:
+            visited = set()
+
+        if start not in visited:
+            print(start, end=' ')
+            visited.add(start)
+
+            for neighbor in self.graph[start]:
+                self.dfs(neighbor, visited)
+
+    def recursive_bfs(self, queue, visited):
+        if not queue:
+            return
+
+        current = queue.popleft()
+        print(current, end=' ')
+
+        for neighbor in self.graph[current]:
+            if neighbor not in visited:
+                queue.append(neighbor)
+                visited.add(neighbor)
+
+        self.recursive_bfs(queue, visited)
+
+    def bfs(self, start):
+        visited = set()
+        queue = deque([start])
+        visited.add(start)
+
+        print("\nBFS:")
+        self.recursive_bfs(queue, visited)
+
+# Take user input to construct the graph
+g = Graph()
+num_edges = int(input("Enter the number of edges: "))
+
+for _ in range(num_edges):
+    u, v = map(int, input("Enter edge (u v): ").split())
+    g.add_edge(u, v)
+
+# Take user input for the starting vertex
+start_vertex = int(input("Enter the starting vertex: "))
+
+# Perform DFS and BFS
+print("\nDFS:")
+g.dfs(start_vertex)
+
+g.bfs(start_vertex)
